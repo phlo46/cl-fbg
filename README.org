@@ -1,9 +1,9 @@
-* Cl-Fbg 
+* cl-fbg
+
+Common Lisp SDK for Facebook Graph API
 
 ** Usage
-
 ** Installation
-
 ** Author
 
 + Long Nguyen (ngphilong46@gmail.com)
