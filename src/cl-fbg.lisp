@@ -1,38 +1,27 @@
 (defpackage cl-fbg
   (:nicknames :fbg)
-  (:use :cl)
+  (:use :cl :iterate :cl-fbg.util)
   (:shadow :get)
-  (:export :get
-           :post
-           :batch-request
-           :*access-token*
-           :*fb-graph-version*))
+  (:export
+   :get
+   :post
+   :batch-request))
 
 (in-package :cl-fbg)
 
-(defparameter *fb-graph-base-url* "https://graph.facebook.com")
-(defparameter *fb-graph-version* "v2.11")
-(defparameter *access-token* nil)
+(defun get (obj &key params (result-as :alist))
+  (let ((res (multiple-value-list (dex:get (build-fb-url obj :params params)))))
+    (setf (car res) (jonathan:parse (car res) :as result-as))
+    (values-list res)))
 
-(defmacro build-fb-graph-query-url (obj params token &body body)
-  `(let* ((uri (format nil "~a/~a/~a/?access_token=~a&~a"
-                       *fb-graph-base-url* *fb-graph-version* ,obj
-                       ,token (or ,params ""))))
-     ,@body))
-
-(defun get (obj &key params (result-as :alist) )
-  (build-fb-graph-query-url obj params *access-token*
-    (jonathan:parse (dex:get uri) :as result-as)))
-
-(defun post (obj &key params (result-as :alist) )
-  (build-fb-graph-query-url obj params *access-token*
-    (jonathan:parse (dex:post uri) :as result-as)))
+(defun post (obj &key content (result-as :alist))
+  (jonathan:parse (dex:post (build-fb-url obj) :content content) :as result-as))
 
 (defun batch-request (batch &key (result-as :alist) (include_headers "true"))
   (jonathan:parse
-   (dex:post *fb-graph-base-url*
+   (dex:post cl-fbg.config:*fb-graph-base-url*
              :content (list
-                       (cons "access_token" *access-token*)
+                       (cons "access_token" cl-fbg.config:*access-token*)
                        (cons "include_headers" include_headers)
                        (cons "batch" (jonathan:to-json batch))))
    :as result-as))
