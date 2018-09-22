@@ -40,7 +40,7 @@
       (subtest "Failed if lacks resource(s)"
         (is-error (cl-fbg:get "") http-request-failed)))
 
-    (clean-up-test-users (cons user friends))))
+    (clean-up-test-users (cons user friends) *fb-app-token*)))
 
 (subtest "Test FB search api"
   ;; search api: https://developers.facebook.com/docs/places/search/
@@ -74,7 +74,7 @@
           (with-token (get-assoc-value "access_token" user)
             (is new-name (get-assoc-value "name" (cl-fbg:get "me")))))))
 
-    (clean-up-test-users (list user))))
+    (clean-up-test-users (list user) *fb-app-token*)))
 
 (subtest "Test get app access token"
   (is-type (get-app-access-token *fb-app-id* *fb-app-secret*) 'string))

@@ -33,12 +33,13 @@
         (friend-request user-id f-id user-token)
         (friend-request f-id user-id f-token)))))
 
-(defun clean-up-test-users (user-list)
-  (let ((user-ids (mapcar (alexandria:curry #'get-assoc-value "id") user-list)))
-     (cl-fbg:batch-request
-      (iter
-        (for user-id in user-ids)
-        (collect (list :|method| "DELETE" :|relative_url| user-id))))))
+(defun clean-up-test-users (user-list app-access-token)
+  (with-token app-access-token
+    (let ((user-ids (mapcar (alexandria:curry #'get-assoc-value "id") user-list)))
+      (cl-fbg:batch-request
+       (iter
+         (for user-id in user-ids)
+         (collect (list :|method| "DELETE" :|relative_url| user-id)))))))
 
 (defun clean-up-test-users-from-app (app-id app-access-token)
   (with-token app-access-token
@@ -47,5 +48,7 @@
            (app-test-users (get-assoc-value "data" resp))
            (app-test-user-ids (mapcar (lambda (u) (get-assoc-value "id" u))
                                       app-test-users)))
-      (dolist (test-user-id app-test-user-ids)
-        (dex:delete (build-fb-url test-user-id))))))
+      (cl-fbg:batch-request
+       (iter
+         (for user-id in app-test-user-ids)
+         (collect (list :|method| "DELETE" :|relative_url| user-id)))))))
