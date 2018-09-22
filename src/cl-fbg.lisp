@@ -10,12 +10,10 @@
 (in-package :cl-fbg)
 
 (defun get (obj &key params (result-as :alist))
-  (let ((res (multiple-value-list (dex:get (build-fb-url obj :params params)))))
-    (setf (car res) (jonathan:parse (car res) :as result-as))
-    (values-list res)))
+  (http-response-wrapper result-as (dex:get (build-fb-url obj :params params))))
 
 (defun post (obj &key content (result-as :alist))
-  (jonathan:parse (dex:post (build-fb-url obj) :content content) :as result-as))
+  (http-response-wrapper result-as (dex:post (build-fb-url obj) :content content)))
 
 (defun batch-request (batch &key (result-as :alist) (include_headers "true"))
   (jonathan:parse

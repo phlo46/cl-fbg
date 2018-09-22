@@ -5,13 +5,20 @@
    :get-app-access-token
    :get-assoc-value
    :build-fb-url
-   :with-token))
+   :with-token
+   :http-response-wrapper))
 
 (in-package :cl-fbg.util)
 
 (defun get-assoc-value (value resp)
   "A helper function to get value from an assoc list"
   (cdr (assoc value resp :test 'equal)))
+
+(defmacro http-response-wrapper (result-as &body body)
+  "A wrapper for dexador http response. Parse response body as :result-as"
+  `(let ((res (multiple-value-list ,@body)))
+     (setf (car res) (jonathan:parse (car res) :as ,result-as))
+     (values-list res)))
 
 (defmacro with-token (token &body body)
   `(let ((cl-fbg.config:*access-token* ,token))
