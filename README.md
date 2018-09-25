@@ -6,8 +6,12 @@ Common Lisp SDK for Facebook Graph API
 
 #### Usage
 
-##### Set access-token
+##### Set graph api version
+``` common-lisp
+(setf cl-fbg.config:*fb-graph-version* "v3.1")
+```
 
+##### Set access-token
 ``` common-lisp
 ;; set access-token
 (setf cl-fbg.config:*access-token* "your-access-token")
@@ -75,6 +79,13 @@ You can choose one of these formats: `:alist :plist :jsown`. Default value is `:
  (list
   (list :|method| "GET" :|relative_url| "me/feed?limit=1")
   (list :|method| "POST" :|relative_url| "me/feed" :|body| "message=Test")))
+```
+
+##### Get App Access Token
+
+``` common-lisp
+(cl-fbg:get-app-access-token *fb-app-id* *fb-app-secret*)
+> "616519131813633|S8nRP-iKpI_8x8dcpzL_8d5XiYE"
 ```
 
 #### Author
