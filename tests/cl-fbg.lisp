@@ -3,7 +3,7 @@
    :cl
    :cl-fbg
    :cl-fbg.util
-   :cl-fbg-test.test-util
+   :iterate
    :prove)
   (:shadowing-import-from :cl :get)
   (:import-from :dexador :http-request-failed))
@@ -19,6 +19,52 @@
 
 (defparameter *fb-app-token* (get-app-access-token *fb-app-id* *fb-app-secret*))
 
+;; == helper functions ==
+(defun create-test-users (app-id app-access-token &key (amount 1))
+  "See: https://developers.facebook.com/docs/graph-api/reference/v3.1/app/accounts/test-users"
+  (let ((url (build-fb-url (format nil "~a/accounts/test-users" app-id)
+                           :params (list (cons "installed" "true")
+                                         (cons "access_token" app-access-token))
+                           :use-access-token nil)))
+    (iter
+      (for i from 1 to amount)
+      (collect (jonathan:parse (dex:post url) :as :alist)))))
+
+(defun create-test-user-friends (user friends)
+  "See: https://developers.facebook.com/docs/graph-api/reference/v3.1/test-user/friends"
+  (dolist (friend friends)
+    (let ((user-id (get-assoc-value "id" user))
+          (user-token (get-assoc-value "access_token" user))
+          (f-id (get-assoc-value "id" friend))
+          (f-token (get-assoc-value "access_token" friend)))
+      (flet ((friend-request (from to token)
+               (dex:post (build-fb-url (format nil "~a/friends/~a" from to))
+                         :content (list (cons "access_token" token)))))
+        (friend-request user-id f-id user-token)
+        (friend-request f-id user-id f-token)))))
+
+(defun clean-up-test-users (user-list app-access-token)
+  (with-token app-access-token
+    (let ((user-ids (mapcar (alexandria:curry #'get-assoc-value "id") user-list)))
+      (batch-request
+       (iter
+         (for user-id in user-ids)
+         (collect (list :|method| "DELETE" :|relative_url| user-id)))))))
+
+(defun clean-up-test-users-from-app (app-id app-access-token)
+  (with-token app-access-token
+    (let* ((url (format nil "~a/accounts/test-users" app-id))
+           (resp (cl-fbg:get url :params (list (cons "limit" 100))))
+           (app-test-users (get-assoc-value "data" resp))
+           (app-test-user-ids (mapcar (lambda (u) (get-assoc-value "id" u))
+                                      app-test-users)))
+      (batch-request
+       (iter
+         (for user-id in app-test-user-ids)
+         (collect (list :|method| "DELETE" :|relative_url| user-id)))))))
+
+
+;; == tests ==
 (subtest "Test FB Graph GET data"
   (let* ((friend-count 3)
          (user (car (create-test-users *fb-app-id* *fb-app-token*)))
