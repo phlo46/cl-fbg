@@ -12,5 +12,5 @@
   :description "Common Lisp SDK for Facebook Graph API"
   :long-description
   #.(read-file-string
-     (subpathname *load-pathname* "README.markdown"))
+     (subpathname *load-pathname* "README.md"))
   :in-order-to ((test-op (test-op "cl-fbg-test"))))

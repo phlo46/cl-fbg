@@ -11,8 +11,7 @@
                "prove")
   :components ((:module "tests"
                 :components
-                ((:file "test-util")
-                 (:test-file "cl-fbg"))))
+                ((:test-file "cl-fbg"))))
   :description "Test system for cl-fbg"
 
   :perform (test-op (op c) (symbol-call :prove-asdf :run-test-system c)))
