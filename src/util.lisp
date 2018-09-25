@@ -2,7 +2,6 @@
   (:use :cl :iterate :cl-fbg.config)
   (:export
    :build-fb-graph-query-url
-   :get-app-access-token
    :get-assoc-value
    :build-fb-url
    :with-token
@@ -33,12 +32,3 @@
     (when use-access-token
       (setf query (concatenate 'string query (format nil "&access_token=~a" *access-token*))))
     (format nil "~a/~a/~a?~a" *fb-graph-base-url* *fb-graph-version* obj query)))
-
-(defun get-app-access-token (app-id app-secret)
-  (let ((url (build-fb-url "oauth/access_token"
-                           :params (list
-                                    (cons "client_id" app-id)
-                                    (cons "client_secret" app-secret)
-                                    (cons "redirect_uri" "https://lisp.org")
-                                    (cons "grant_type" "client_credentials")))))
-    (get-assoc-value "access_token" (jonathan:parse (dex:get url) :as :alist))))

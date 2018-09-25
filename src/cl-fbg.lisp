@@ -5,7 +5,8 @@
   (:export
    :get
    :post
-   :batch-request))
+   :batch-request
+   :get-app-access-token))
 
 (in-package :cl-fbg)
 
@@ -23,3 +24,12 @@
                        (cons "include_headers" include_headers)
                        (cons "batch" (jonathan:to-json batch))))
    :as result-as))
+
+(defun get-app-access-token (app-id app-secret)
+  (let ((url (build-fb-url "oauth/access_token"
+                           :params (list
+                                    (cons "client_id" app-id)
+                                    (cons "client_secret" app-secret)
+                                    (cons "redirect_uri" "https://lisp.org")
+                                    (cons "grant_type" "client_credentials")))))
+    (get-assoc-value "access_token" (jonathan:parse (dex:get url) :as :alist))))
