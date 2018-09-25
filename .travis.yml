@@ -15,5 +15,6 @@ install:
 
 script:
   - cl -e '(ql:quickload :cl-fbg)
+           (ql:quickload :prove)
            (unless (asdf:test-system :cl-fbg)
              (uiop:quit 1))'
