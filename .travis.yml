@@ -1,0 +1,18 @@
+language: lisp
+
+env:
+  global:
+  - FB_APP_ID=616519121883649
+  - secure: aClovuO+fBHmvWhIMRNXVhXmnnt+4ti/5NDWX9JDTRC0IKATrlQhIGMRr1Xt7Y50dL8H8EMf4+minJ8zLxIztSoDJAbuIN8amD7CIK08Zxpw4lCMYQ8QnChpT2JoKdaEDPcF3XqFTluvdetD01+GVazUHP+GavKtyCJRliLRwf2WUT6N+M6Jw6yGkH5e2xRDD4hQTQ5KajOFvuoEtTUkRQN0jFQvut4DZNGcWy6iJXICzA2H3y4AJLgxFxXze1otAbhlJoj0l67daO5o5jXk/CvJXb5v7dADDOuQ6ZaGAiz0k/oH+HrEfFJRY9qt3MK4BTzkpVeMnbQeo9hlP4lDJTOzYpQA2jULsA1CASuE9y1ELr8RVk2HwsM9IMaiYZwVGamN0eg2YdnTxAy3yeX0FfEepxxKkdX3AxE0b7ubAfoCvmWL7bb45lPm/Fo7BjxEn9YBpl5Pm0o4FG2hKHSYli4ZRrj74+MZ5EUC7yS1OUSdQOqO12/1Cy2OaIntJo3EbTIthCfEPTQMok3XC8btRe6jW2VSABPYRufGwxRLjW6hUIR2NmT8MaX51eF/oaDe/E0JX+7uvAcQOeHFoEKNYIWoDl8qPGSzwcoWrB5ZSyhWNHXN++jMipXzOGwLGvuitCld3gK2Bp5VSTHAucU4HNiAx7hiQrwtOlUwsP4q1tg=
+  - TIMEOUT=1000
+  matrix:
+  - LISP=sbcl
+  - LISP=ccl
+
+install:
+  - curl -L https://github.com/luismbo/cl-travis/raw/master/install.sh | sh
+
+script:
+  - cl -e '(ql:quickload :cl-fbg)
+           (unless (asdf:test-system :cl-fbg)
+             (uiop:quit 1))'
