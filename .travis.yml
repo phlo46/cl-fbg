@@ -1,14 +1,15 @@
 language: lisp
+
 sudo: required
 
 env:
   global:
-  - FB_APP_ID=616519121883649
-  - secure: aClovuO+fBHmvWhIMRNXVhXmnnt+4ti/5NDWX9JDTRC0IKATrlQhIGMRr1Xt7Y50dL8H8EMf4+minJ8zLxIztSoDJAbuIN8amD7CIK08Zxpw4lCMYQ8QnChpT2JoKdaEDPcF3XqFTluvdetD01+GVazUHP+GavKtyCJRliLRwf2WUT6N+M6Jw6yGkH5e2xRDD4hQTQ5KajOFvuoEtTUkRQN0jFQvut4DZNGcWy6iJXICzA2H3y4AJLgxFxXze1otAbhlJoj0l67daO5o5jXk/CvJXb5v7dADDOuQ6ZaGAiz0k/oH+HrEfFJRY9qt3MK4BTzkpVeMnbQeo9hlP4lDJTOzYpQA2jULsA1CASuE9y1ELr8RVk2HwsM9IMaiYZwVGamN0eg2YdnTxAy3yeX0FfEepxxKkdX3AxE0b7ubAfoCvmWL7bb45lPm/Fo7BjxEn9YBpl5Pm0o4FG2hKHSYli4ZRrj74+MZ5EUC7yS1OUSdQOqO12/1Cy2OaIntJo3EbTIthCfEPTQMok3XC8btRe6jW2VSABPYRufGwxRLjW6hUIR2NmT8MaX51eF/oaDe/E0JX+7uvAcQOeHFoEKNYIWoDl8qPGSzwcoWrB5ZSyhWNHXN++jMipXzOGwLGvuitCld3gK2Bp5VSTHAucU4HNiAx7hiQrwtOlUwsP4q1tg=
-  - TIMEOUT=1000
+    - FB_APP_ID=616519121883649
+    - secure: eG9shuHQH/nzEL6Ye6S7jai+yCoOhbv2fUrrQFkduY0qXUspEz7QUzViatCohq5siwlmQR9WMElM8mAdySPuNMtFgDPI8mgTmv6KDwrNSuBwP37mUz1+xmCY5MHST6vES7Ob/wmpn5gq1jzxCt+Lxphb0ONbgQZ6shAUuCocBlqOL96K/zTKiADMSjF1otxfrRPOa5grO2hpRHtcxM/Fxy9cZEz4A0D4merMS+NMzq+4A4DbknOanEmsBtzuMNL3kZvIZOy5/5cSevOcn067uQhd3dx61dYVaqxXlxN4/9RGRz3knPuaTIrX/E0qt8kcwdbJfCrvd1UR10XFep8nvGZQMQILiYkICbN+pooqSLBgwR/AUZl4T9ka8Y2KyD+c+B9JKGXsfr1XWLdASPdUQlNm2nnbOfFbNRrlql0nDq7Ovk+I2IZxeDHXnmmA2VVJ+f9kw2y/sUPg5WGSwI/q4ROeBimfSrj1afnqrwlgD6dkw5nPPxrZv4NyDUq901x+m3dlPGEs2qqPZTrJw9I5IwzpXXzNk7H2gW2rm9G5V1u3qHNPLg2HDAXDrnJG08nT1jYxIzG8WIzL97/Doq8WLpM4Fq0MSXOYZygy9hF7NmBwO20LKsVoV5icxxfaN4rvEZQkqYLCZwKwt1YCvnXcWlGk/Drt4PphpmbaiRWuTqY=
+    - TIMEOUT=1000
   matrix:
-  - LISP=sbcl
-  - LISP=ccl
+    - LISP=sbcl
+    - LISP=ccl
 
 install:
   - curl https://raw.githubusercontent.com/luismbo/cl-travis/master/install.sh | sh
