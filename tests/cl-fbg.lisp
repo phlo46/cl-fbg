@@ -1,7 +1,6 @@
 (defpackage cl-fbg-test
   (:use
    :cl
-   :cl-fbg
    :cl-fbg.util
    :iterate
    :prove)
@@ -17,7 +16,7 @@
 (defparameter *fb-app-id* (uiop:getenv "FB_APP_ID"))
 (defparameter *fb-app-secret* (uiop:getenv "FB_APP_SECRET"))
 
-(defparameter *fb-app-token* (get-app-access-token *fb-app-id* *fb-app-secret*))
+(defparameter *fb-app-token* (cl-fbg:get-app-access-token *fb-app-id* *fb-app-secret*))
 
 ;; == helper functions ==
 (defun create-test-users (app-id app-access-token &key (amount 1))
@@ -46,7 +45,7 @@
 (defun clean-up-test-users (user-list app-access-token)
   (with-token app-access-token
     (let ((user-ids (mapcar (alexandria:curry #'get-assoc-value "id") user-list)))
-      (batch-request
+      (cl-fbg:batch-request
        (iter
          (for user-id in user-ids)
          (collect (list :|method| "DELETE" :|relative_url| user-id)))))))
@@ -58,7 +57,7 @@
            (app-test-users (get-assoc-value "data" resp))
            (app-test-user-ids (mapcar (lambda (u) (get-assoc-value "id" u))
                                       app-test-users)))
-      (batch-request
+      (cl-fbg:batch-request
        (iter
          (for user-id in app-test-user-ids)
          (collect (list :|method| "DELETE" :|relative_url| user-id)))))))
@@ -123,6 +122,6 @@
     (clean-up-test-users (list user) *fb-app-token*)))
 
 (subtest "Test get app access token"
-  (is-type (get-app-access-token *fb-app-id* *fb-app-secret*) 'string))
+  (is-type (cl-fbg:get-app-access-token *fb-app-id* *fb-app-secret*) 'string))
 
 (finalize)
