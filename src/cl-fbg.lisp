@@ -1,6 +1,6 @@
 (defpackage cl-fbg
   (:nicknames :fbg)
-  (:use :cl :iterate :cl-fbg.util)
+  (:use :cl :cl-fbg.util)
   (:shadow :get)
   (:export
    :get
